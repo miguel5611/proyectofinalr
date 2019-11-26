@@ -140,9 +140,9 @@ kable(tabla_divisas, format = "markdown" ,caption = "Una kable knitr",digits = 3
 
 ```
 
-## 4. Gráfico estático evolución del MXN Y BRL frente al EUR
+## 4. Gráfico estático evolución del EUR frente al MXN Y BRL.
 
-En el grafico podemos observar la evolucion del Real Brasileño y del Peso Mexicano frente al euro en el último año en base 1, donde el Real Brasileño sube un 7% frente al euro y el Peso mexicano sufre una caida del 7%, basandonos en el precio de apertura del mercado de divisas.
+En el grafico podemos observar la evolucion del Euro frente al Real Brasileño y al Peso Mexicano en el último año basandonos en el precio de apertura del mercado de divisas. Se ha realizado en base 1,para que podamos adaptar ambas divisas a un mismo formato, donde el Euro sube un 7% frente al Real Brasileño y una caida del 7% frente al Peso Mexicano. 
 
 ```{r pressure, echo=FALSE}
 
@@ -151,7 +151,7 @@ grafico1
 
 ```
 
-## 5. Gráfico dinámico evolución del MXN Y BRL frente al EUR
+## 5. Gráfico dinámico evolución del EUR frente al MXN Y BRL.
 
 Gracias al gráfico dinámico, se observar mejor la evolución de ambas divisas frente al Euro, teniendo la posibilidad de ir viendo la evolucíon dia a dia, en funcion al precio de apertura del mercado de divisas.
 
