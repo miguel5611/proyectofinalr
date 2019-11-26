@@ -19,10 +19,10 @@ library(dygraphs)
 library(xts)
 library(zoo)
 library(ggthemes)
-library(prettydoc)
+library(dplyr)
 library(knitr)
 library(rmdformats)
-library(kableExtra)
+
 
 ```
 
