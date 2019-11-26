@@ -1,0 +1,164 @@
+---
+title: "Proyecto Business perfomance analysis"
+date: "`r Sys.Date()`"
+author: Miguel Añibarro
+output:
+  rmdformats::readthedown:
+    highlight: haddock
+    self_contained: true
+    code_folding: show
+    
+---
+
+```{r include=FALSE}
+library(ggplot2)
+library(xml2)
+library(rvest)
+library(plyr)
+library(dygraphs)
+library(xts)
+library(zoo)
+library(ggthemes)
+library(prettydoc)
+library(knitr)
+library(rmdformats)
+library(kableExtra)
+
+```
+
+## *Introducción*
+
+En el proyecto final de la asignatura Business perfomance analysis, se tratarán varios aspectos del curso, nos centraremos en explicar las principales características de dos páginas de expresiones regulares y otras dos de Markdown, así como las principales diferencias y conclusiones,
+En un Segundo bloque, se expondran mediante una tabla, un gráfico y un gráfico dinamico, la evolución del del Real Brasileño y del Peso Mexicano frente al Euro.
+
+## 1. Recursos sobre expresiones regulares
+Para comprender las expresiones regulares he elegido dos páginas, con información muy clara sobre las principales expresiones regulares para r.
+
+**La primera página**, es un blog realizado por Diego Calvo, [Diego Calvo](http://www.diegocalvo.es/expresiones-regulares-en-r/), que explica las funciones sobre  algunas de las expresiones regulares que mas se utilizan, junto con  la sintaxis de cada una de ellas, además, ofrece algunos ejemplos del código para poder aplicarlo .Algunos ejemplos que nos muestra en su página web son los siguientes:
+
+<center> Expresión| sintáxis|
+:--: | :--:
+SPRINTF | Imprimir cadenas de texto con números |
+STRSPLIT |  Separar una cadena en partes        | 
+</center>
+**La segunda pagina** a buscar, [Rpubs](http://rpubs.com/ydmarinb/429756#:~:targetText=Que%20son%20las%20expresiones%20regulares,caracteres%20u%20operaciones%20de%20sustituciones.), comienza con una definición de lo que significan las expresiones regulares, junto con la explicación de muchas de las  principales expresiones regulares, además, dentro de lo que son las expresiones regulares, las divide en varios grupos en función de sus características, entre las que destacan los cuantificadores, alternación, agrupación o las barras invertidas, los signos de admiración y los meta caracteres, con la posterior explicación de cada uno de ellos. 
+Para finalizar explica su posterior implantación en r estudio con varios ejemplos.
+
+#### **Diferencias y conclusión**   
+
+la principal **diferencia** entre ambas, está en la ordenación de las páginas, la página de *Diego Calvo*, es mucho más simple, solo tiene algunas de las principales expresiones regulares, con pequeños ejemplos, en cambio, la página de *Rpubs*, es mucho más completa, porque además de mostras más expresiones regulares, añade teoría para poder comprenderlas mejor, además ofrece un índice bastante explicativo para poder navegar de una manera más intuitiva.
+
+Como **conclusión** podemos afirmar, que la página de *Rpubs* es mucho más completa, tiene más información y está más organizada, aunque la página de *Diego Calvo* ofrece la posibilidad de poner comentarios  públicos para dudas que el mismo resuelve, cosa que la página de *rpubs*, permite, pero con la obligatoriedad de registrase.
+
+## 2. Recursos sobre Mark Down
+
+En cuanto a Mark Down, hemos elegido otras dos páginas web, que nos ilustran diversas formas con las que aprender Markdown
+
+
+ **La primera página** [Joedicastro](https://joedicastro.com/pages/markdown.html), es un blog, creado por Joe Di Castro, nos muestra en su inicio una breve descripción del contenido, aparecen las principales características que se pueden emplear en Mark Down, posteriormente aparece un índice para poder navegar de una manera más sencilla donde podemos destacar, la definición de Markdown , y la sintaxis del mismo ,por ejemplo insertar cabeceras, imágenes, listas o textos junto con diversos ejemplos de implantación del código.
+
+Un ejemplo de implantación de imagen, aplicando, lo que la pagina nos ofrece seria el siguiente, en el cual mostramos la imagen que aparece en la parte superior de la página con el logo del creador de la misma.
+
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAxBAMAAADKNk2HAAAAAXNSR0IArs4c6QAAABhQTFRFvI0Ww5kxzaxW2Lp049Ki7ePG8+zX/f/8R8l4ugAAAAFiS0dEAIgFHUgAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfbDAsTFi548ol9AAADmElEQVRIx62XTXOjOBCGJeHMuWWwueLZyXAV8aS4hpnscg07yXJdnCpz5kv6+9stk4CzMJusocoOBvTQ3Xr7lcLMcLQ3ch2b/3+w17MuAi6BxwuwWuC3pXmGzeWsBlz7t+AXs9qXeOo5ls7fywq8l/jYzBgVvpNV8PKF9Xp2fnRyFpHkY1YHry+dy7GanZOWn8WViWHMDCuY1UqxHbP0EJapxHSK89Mr0zFrHMvd5oMp1uJ4LAdW5gy3wH9nis1OSsmGozyx1NWQC6S/ru8Qz+ff9vv7+0f51/H49PT0ex9XsPqv0g/1/Vfy3rm+Mv7tW/8zW02OmI72bfLM9iITvyxXI8ykgh9R2m91396WL205GUDi11PxFsJkvtET/jVfLi3TyW6ErZF5K2dYaiSjcqzf7ly596d2y2vHJM4Mixqgdb8j5k/o39fdhMFrEXXEU7rHqOK7rVG+PlX4cP3lDYsauwPGfBNxcHqP5HuZP/dWEAjkHrhHZS1YiuZR8TIhp2IsPWdljv6Ocxr4GY+jlLJswcMsNOT9fdRyC1+1SyYkSVyZG6EGgHuy7M5Y4GJXQAh7RqUuPmEBPcT51ar3tjzz6FKNjXLncfLHADCLgvEDb8SYhZG6as1rrlY6xdnLbdKKlyjIh9Ba6y6/Q7PEsjaidjDFRnyWpWZylXkQj1hY2OtWVkJxJuUn84B9o3xTM6cVtiEbYd/n0/qiIa62GK6K8etvEWyAbcbr444e21YM5COsS1I0hqYxh8K3bk8fDbzscOqUYwJfhY2DNM3CgHN3NI8d4GMmSDvmIic3EJM3mWQty4B0hGB8KmJXOMd5wX56cCtzFWPAD9xU7HqkLx2sUXX4fIEcnHjridXqwBOvFba1qOAZV2HGeM18teMF2wtTbRvCu2OtRqLE0DueUF05tZptKQiVXzvWwytUFmzVDU8YqgLAU0LhnLgQeTuej1gZz+1qhkLBUVfPJxNv5AZLRhqzThXhieJhxTysiMzlD4cGbhrWb0JOrEbGJqMRbXoKp/e+I3YUfVsPYfSeLrWXqEFLRQiM6LEc9yPtAIbFqJXXU3bx8483F75Mrdu0bFcXbEpGLLtsq+0iLFrTWpkuwbJhFcIswbKYmTX2oyzC1DNbpQ+yLEZtzBKsxFum8sSiyo93JxewrE9BuAiLvHwBzVsW2vAigiBWEC4VlmEQ64XCQtYmWigszJFd8q/ZOesgvy6EMv8ALXTFAI7iFV4AAAAASUVORK5CYII=)</center>
+
+
+**La segunda página** [Ionos](https://www.ionos.es/digitalguide/paginas-web/desarrollo-web/tutorial-de-markdown/),es un sencillo tutorial de *Digital Guide IONOS*, sobre Markdown, comienza con una pequeña introducción junto las principales  funciones, añade también un índice, no muy elaborado sobre lo que trata la página, junto con la definición y ejemplos de las posibles aplicaciones, como títulos, negritas, hipervínculos o tablas, además después de cada definición añade una notas extras y consejos de uso.
+
+#### **diferencias y conclusión** 
+La principal **diferencia** entre ambas páginas, está en la información que ofrecen ambas, la de *Joe di Castro* es mucho más completa y ofrece muchas más definiciones y aplicaciones que la página de *Ionos*, que es un pequeño tutorial de las funciones básicas de Markdown.
+
+Como **conclusión** podemos afirmar, que la página de *Joe Di Castro*, ofrece una información más clara y precisa, además el índice mucho más detallado que la de *ionos*, ofrece una mayor claridad a la hora de navegar por la misma.
+
+
+```{r include=FALSE}
+
+url<-"http://www.finanzas.com/divisas/eur-brl/datos-historicos.html"
+tmp <- read_html(url)
+tmp <- html_nodes(tmp, "table")
+sapply(tmp, class)
+sapply(tmp, function(x) dim(html_table(x, fill = TRUE)))
+brasil <- html_table(tmp[[1]])
+colnames(brasil)<-c("fecha","open_price","cierre","dif","maximo","min","volumen")
+brasil$volumen<- NULL
+
+url<-"http://www.finanzas.com/divisas/eur-mxn/datos-historicos.html"
+tmp <- read_html(url)
+tmp <- html_nodes(tmp, "table")
+sapply(tmp, class)
+sapply(tmp, function(x) dim(html_table(x, fill = TRUE)))
+mexico <- html_table(tmp[[1]])
+colnames(mexico)<-c("fecha","open_price","cierre","dif","maximo","min","volumen")
+mexico$volumen<-NULL
+
+tablafinal<- cbind(brasil[,c(1,2)], mexico[,2])
+foo1 <- function(x){
+  as.Date(x,format= "%d/%m/%Y")}
+
+tablafinal2 <- ddply(tablafinal,.(),transform, fecha = foo1(fecha))
+foo<- function(x){
+  x<-as.numeric(gsub(",",".",x))
+}
+tablafinal2$.id<-NULL
+tablafinal2[,2:3]<- sapply(tablafinal2[,2:3],foo)
+colnames(tablafinal2)<- c("fecha","BRL","MXN")
+tablafinal2 <- tablafinal2[nrow(tablafinal2):1,]
+tablafinal2$origen_BRL<- (tablafinal2$BRL/tablafinal2$BRL[1])
+tablafinal2$origen_MXN<- (tablafinal2$MXN/tablafinal2$MXN[1])
+tabla_divisas<-head(tablafinal2)
+
+
+grafico1<-ggplot(data=tablafinal2, aes(x=fecha)) +
+          geom_line(aes(y=origen_BRL, color="BRL"))  +
+          geom_line(aes(y=origen_MXN, color="MXN")) +
+          labs(color= "legend") + xlab("Fecha") + ylab("evolución divisas") +
+          ggtitle("Cotización EUR/BRL & EUR/MXN")+geom_hline(yintercept=1) + 
+          theme_minimal()+theme(plot.title = element_text(hjust = 0.5))
+
+EUR_BRL<- xts(tablafinal2$origen_BRL, order.by = tablafinal2$fecha, frecuency =365)
+EUR_MXN<- xts(tablafinal2$origen_MXN, order.by = tablafinal2$fecha, frecuency =365)
+grafico<- cbind(EUR_BRL,EUR_MXN)
+
+grafico2<-dygraph(grafico, ylab="evolución divisas" ,xlab ="Date", main="Cotización EUR/BRL & EUR/MXN")  %>% 
+          dySeries("EUR_BRL", label = "Real Brasileño") %>%
+          dySeries("EUR_MXN", label = "Peso Mexicano") %>%
+          dyOptions(stackedGraph = FALSE) %>%
+          dyRangeSelector(height = 30) %>%
+          dyHighlight(highlightSeriesOpts = list(strokeWidth = 1))  %>% 
+          dyLegend(width = 350)
+        
+```
+
+## 3. Tabla del gráfico
+
+En la siguente tabla, se puede observar parte de los datos utilizados para la realización de los graficos, incluyendo las variables del precio de apertura del mercado del Real brasileño frente al Euro y el Peso Mexicano frente al euro, además en las dos últimas columnas he realizado una conversion en base 1 de ambas monedas para poder observar la evolución de ambas divisas con una mayor claridad en funcion del precio de apertura del mercado de divisas.
+
+```{r tabla, echo=FALSE}
+kable(tabla_divisas, format = "markdown" ,caption = "Una kable knitr",digits = 3
+ , col.names = c("Fecha","Eur/Brl","Eur/Mxn","Open_Eur/Brl","Open_Eur/Mxn")
+        , row.names = TRUE)
+
+
+```
+
+## 4. Gráfico estático evolución del MXN Y BRL frente al EUR
+
+En el grafico podemos observar la evolucion del Real Brasileño y del Peso Mexicano frente al euro en el último año en base 1, donde el Real Brasileño sube un 7% frente al euro y el Peso mexicano sufre una caida del 7%, basandonos en el precio de apertura del mercado de divisas.
+
+```{r pressure, echo=FALSE}
+
+grafico1
+
+
+```
+
+## 5. Gráfico dinámico evolución del MXN Y BRL frente al EUR
+
+Gracias al gráfico dinámico, se observar mejor la evolución de ambas divisas frente al Euro, teniendo la posibilidad de ir viendo la evolucíon dia a dia, en funcion al precio de apertura del mercado de divisas.
+
+```{r grafico2, echo=FALSE}
+
+grafico2
+
+
+```
+
